@@ -13,19 +13,16 @@ from PIL import Image, ImageDraw, ImageFont
 warnings.filterwarnings('ignore')
 warnings.warn('DelftStack')
 warnings.warn('Do not show this message')
+
 '''
 script_parser = argparse.ArgumentParser(description="options to run the inference model")
 script_parser.add_argument('--input', '-i', type=str, help="0 for camera or path for video")
 args = script_parser.parse_args()'''
 
-model = load_model('model.h5')
+model = load_model('SignLanguageModel.h5')
 encoder = joblib.load('encoder.pkl')
 mp_drawing = mp.solutions.drawing_utils
 mp_holistic = mp.solutions.holistic
-#NEW
-mp_pose = mp.solutions.pose
-pose = mp_pose.Pose()
-
 
 def extract_keypoints(results):
     la = np.array([[res.x, res.y, res.z] if res.visibility > 0.2 else [0, 0, 0] for res in
