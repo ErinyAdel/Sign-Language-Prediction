@@ -45,7 +45,7 @@ guaranteed with a larger database (if the videos are correctly set). The video
 augmentation has been done with Python. Then Augmentation on the videos were applied
 in order to add to the training efficiency, a list of 9 different augmentations were added to
 the videos, and applying these augmentations once for original data and another for flipped/mirrored data
-```python
+   ```python
 import imgaug.augmenters as iaa
 augs=[iaa.Rotate(5),iaa.Rotate(10),iaa.Rotate(15),
       iaa.Rotate(-5),iaa.Rotate(-10),iaa.Rotate(-15),
