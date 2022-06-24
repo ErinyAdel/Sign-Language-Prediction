@@ -9,10 +9,10 @@ dimensions by MediaPipe.
 After using these methodologies in our model, we got a very efficient model with 100% training
 and validation accuracy, 99.98% in testing, and very accurate results in real-time testing.
 
-## The main challenges facing the purpose of the application are:
-- The Speed of The Sign Recognition
-- The Accuracy of Detecting The Sign Gesture To its Matched Word
-- Connecting The Model With a Working Web Application
+## The Main Challenges Facing The Purpose of The Application
+- The speed of the sign recognition
+- The accuracy of detecting the sign gesture to its matched word
+- Connecting the model with a working web application
 
 ## Implementation Details:
 
