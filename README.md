@@ -29,7 +29,8 @@ Adobe Premiere.
 
 ![Adobe Premier](images/Screenshot%202022-06-18%20021157.png "Trimming")
   
-  
+<br />
+
 - Fixing the number of frames of all videos to be balanced data.
 Then a Fix_Video() function is applied to obtain a fixed frame number on all videos, the
 chosen frame number is 30 frame per video. The function Removes excessive frames from videos that
@@ -38,8 +39,9 @@ the required FPS.
 ```python
 def fixVideo(frames, video_name, startFrames=0, endFrames=0, middleFrames=0):
 ```
-  
-  
+
+<br />
+
 - Augmentation the dataset size to be able to identify signs. Better results are
 guaranteed with a larger database (if the videos are correctly set). The video
 augmentation has been done with Python. Then Augmentation on the videos were applied
@@ -61,8 +63,9 @@ for video in df["Video"]:
     output=aug.augment_images(video_file)
     vwrite(f'{video.split(".")[0]}_filp.mp4',output)
 ```
-  
-  
+
+<br /> 
+
 ### 3. Feature Extraction 
 Features are extracted from videos using a tool called MediaPipe. Its function
 is to adjust the points on the focused body and hands positions in order to take part to
@@ -82,8 +85,6 @@ def extract_keypoints(results):
 ```
   
 <br />  
-<br />
-<br />
 
 ## 4. Building The Model:
 A detection confidence in the Holistic model is adjusted such that the tracking confidence
