@@ -1,4 +1,4 @@
-# Egyptian Sign Language Prediciton Using CNN And LSTM 
+# Egyptian Sign Language Prediciton Using CNN And LSTM With MediaPioe
 Hand gestures are one of the nonverbal communication modalities used in sign language. It is
 most often used by deaf people who have hearing or speech impairments to communicate with
 other deaf people or even with normal people, so a Deep Learning model is implemented to
@@ -22,11 +22,13 @@ references on popular platforms like YouTube
 
 ![Youtube Header](images/Screenshot%202022-06-18%20020846.png "لغة الاشارة المصرية")
 
+
 ### 2. Data Preprocessing
 - Trimming the parts of needed exact gestures using media editing software like
 Adobe Premiere.
 
 ![Adobe Premier](images/Screenshot%202022-06-18%20021157.png "Trimming")
+
 
 - Fixing the number of frames of all videos to be balanced data.
 Then a Fix_Video() function is applied to obtain a fixed frame number on all videos, the
@@ -36,6 +38,7 @@ the required FPS.
 ```python
 def fixVideo(frames, video_name, startFrames=0, endFrames=0, middleFrames=0):
 ```
+
 
 - Augmentation the dataset size to be able to identify signs. Better results are
 guaranteed with a larger database (if the videos are correctly set). The video
@@ -59,11 +62,12 @@ for video in df["Video"]:
     vwrite(f'{video.split(".")[0]}_filp.mp4',output)
 ```
 
+
 ### 3. Feature Extraction 
-After that, features from videos are extracted using a tool called MediaPipe. Its function
+Features are extracted from videos using a tool called MediaPipe. Its function
 is to adjust the points on the focused body and hands positions in order to take part to
 train the model later.
->In MediaPipe, a section called Holistic MediaPipe is used which contains the two main models used for adjusting the points, Hands and Pose. MediaPipe Hands utilizes an ML pipeline consisting of multiple models working together: A palm detection model that operates on the full image and returns an oriented hand bounding box. A hand landmark model that operates on the cropped image region defined by the palm detector and returns high-fidelity 3D hand key points. MediaPipe Poses use the same mechanism for the rest of the body. The Hand model is fully used to detect the hands in the extracted videos, and the Pose model is used only on points 13,15 and 14,16.
+>In MediaPipe, a section called Holistic MediaPipe is used which contains the two main models used for adjusting the points, Hands and Pose. MediaPipe Hands utilizes an ML pipeline consisting of multiple models working together: A palm detection model that operates on the full image and returns an oriented hand bounding box. A hand landmark model that operates on the cropped image region defined by the palm detector and returns high-fidelity 3D hand key points. MediaPipe Poses use the same mechanism for the rest of the body. The Hand model is fully used to detect the hands (with all 21 landmarks for each hand), but the Pose model is used only on specific points to be more accurate in front of the camera, these landmarks are 13,15 and 14,16 which are for left and right wrist and elbow.
 
 ![Mediapipe Hands](images/Screenshot%202022-06-18%20021946.png)
 ![Mediapipe Pose](images/Screenshot%202022-06-18%20022101.png)
