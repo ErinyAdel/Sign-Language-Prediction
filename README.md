@@ -28,8 +28,8 @@ references on popular platforms like YouTube
 Adobe Premiere.
 
 ![Adobe Premier](images/Screenshot%202022-06-18%20021157.png "Trimming")
-  
-  
+<br/>
+<br/>
 - Fixing the number of frames of all videos to be balanced data.
 Then a Fix_Video() function is applied to obtain a fixed frame number on all videos, the
 chosen frame number is 30 frame per video. The function Removes excessive frames from videos that
@@ -38,8 +38,8 @@ the required FPS.
 ```python
 def fixVideo(frames, video_name, startFrames=0, endFrames=0, middleFrames=0):
 ```
-  
-  
+<br/>
+<br/>
 - Augmentation the dataset size to be able to identify signs. Better results are
 guaranteed with a larger database (if the videos are correctly set). The video
 augmentation has been done with Python. Then Augmentation on the videos were applied
@@ -61,8 +61,8 @@ for video in df["Video"]:
     output=aug.augment_images(video_file)
     vwrite(f'{video.split(".")[0]}_filp.mp4',output)
 ```
-  
-  
+<br/>
+<br/>
 ### 3. Feature Extraction 
 Features are extracted from videos using a tool called MediaPipe. Its function
 is to adjust the points on the focused body and hands positions in order to take part to
@@ -71,8 +71,17 @@ train the model later.
 
 ![Mediapipe Hands](images/Screenshot%202022-06-18%20021946.png)
 ![Mediapipe Pose](images/Screenshot%202022-06-18%20022101.png)
-  
-  
+
+```python
+def extract_keypoints(results):
+    la = np.array([[res.x, res.y, res.z] if res.visibility > 0.2 else [0,0,0] for res in np.array(results.pose_landmarks.landmark)[[13,15]]]) if results.pose_landmarks else np.zeros((2,3))
+    lh = np.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]) if results.left_hand_landmarks else np.zeros((21,3))
+    ra = np.array([[res.x, res.y, res.z] if res.visibility > 0.2 else [0,0,0] for res in np.array(results.pose_landmarks.landmark)[[14,16]]]) if results.pose_landmarks else np.zeros((2,3))
+    rh = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]) if results.right_hand_landmarks else np.zeros((21,3))
+    return np.concatenate([la ,lh ,ra , rh])
+```
+<br/>
+<br/>
 ## 4. Building The Model:
 A detection confidence in the Holistic model is adjusted such that the tracking confidence
 is determined to be equal to 0.001 to be able to detect anything and extract any feature.
@@ -89,14 +98,7 @@ mentioned. If the visibility is greater 0.2, it appends them in array with its X
 coordinates. If the visibility is less than the assigned number, it appends it all with zeros.
 The model applies the same mechanism for all landmarks as shown in the following
 
-```python
-def extract_keypoints(results):
-    la = np.array([[res.x, res.y, res.z] if res.visibility > 0.2 else [0,0,0] for res in np.array(results.pose_landmarks.landmark)[[13,15]]]) if results.pose_landmarks else np.zeros((2,3))
-    lh = np.array([[res.x, res.y, res.z] for res in results.left_hand_landmarks.landmark]) if results.left_hand_landmarks else np.zeros((21,3))
-    ra = np.array([[res.x, res.y, res.z] if res.visibility > 0.2 else [0,0,0] for res in np.array(results.pose_landmarks.landmark)[[14,16]]]) if results.pose_landmarks else np.zeros((2,3))
-    rh = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]) if results.right_hand_landmarks else np.zeros((21,3))
-    return np.concatenate([la ,lh ,ra , rh])
-```
+
 
 The Resulted Shape was (16366, 30, 46, 3) which means the batch number of videos we
 extracted from the beginning is 16366 videos that is 30 frames per second for each, and
