@@ -20,14 +20,14 @@ and validation accuracy, 99.98% in testing, and very accurate results in real-ti
 The dataset is manually collected. We gathered clips from certified
 references on popular platforms like YouTube
 
-![Youtube Header](images/Screenshot%202022-06-18%20020846.png "لغة الاشارة المصرية")
+![Youtube Header](images/hand_landmarks.png "لغة الاشارة المصرية")
   
   
 ### 2. Data Preprocessing
 - Trimming the parts of needed exact gestures using media editing software like
 Adobe Premiere.
 
-![Adobe Premier](images/Screenshot%202022-06-18%20021157.png "Trimming")
+![Adobe Premier](images/premiere_interface.png "Trimming")
   
 <br />
 
@@ -73,8 +73,8 @@ is to adjust the points on the focused body and hands positions in order to take
 train the model later.
 >In MediaPipe, a section called Holistic MediaPipe is used which contains the two main models used for adjusting the points, Hands and Pose. MediaPipe Hands utilizes an ML pipeline consisting of multiple models working together: A palm detection model that operates on the full image and returns an oriented hand bounding box. A hand landmark model that operates on the cropped image region defined by the palm detector and returns high-fidelity 3D hand key points. MediaPipe Poses use the same mechanism for the rest of the body. The Hand model is fully used to detect the hands (with all 21 landmarks for each hand), but the Pose model is used only on specific points to be more accurate in front of the camera, these landmarks are 13,15 and 14,16 which are for left and right wrist and elbow.
 
-![Mediapipe Hands](images/Screenshot%202022-06-18%20021946.png)
-![Mediapipe Pose](images/Screenshot%202022-06-18%20022101.png)
+![Mediapipe Hands](images/hand_landmarks.png)
+![Mediapipe Pose](images/pose_landmarks.png)
 
 ```python
 def extract_keypoints(results):
