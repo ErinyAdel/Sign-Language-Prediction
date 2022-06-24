@@ -10,15 +10,15 @@ After using these methodologies in our model, we got a very efficient model with
 and validation accuracy, 99.98% in testing, and very accurate results in real-time testing.
 
 ## The main challenges facing the purpose of the application are:
-- The speed of sign recognition
-- The accuracy of detecting the sign gesture to its matched word
-- Connecting the model with a working web application
+- The Speed of The Sign Recognition
+- The Accuracy of Detecting The Sign Gesture To its Matched Word
+- Connecting The Model With a Working Web Application
 
-## Implementation Details :
+## Implementation Details:
 - First of all, the Data Set is manually collected. We gathered clips from certified
 references on popular platforms like YouTube
 
-![Youtube Header](images/Screenshot%202022-06-18%20020846.png "لغة الاشارة")
+![Youtube Header](images/Screenshot%202022-06-18%20020846.png "لغة الاشارة المصرية")
 - We then trimmed the parts of needed exact gestures using media editing software like
 Adobe Premiere.
 ![Adobe Premier](images/Screenshot%202022-06-18%20021157.png "Trimming")
