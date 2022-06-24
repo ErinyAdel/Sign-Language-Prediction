@@ -84,6 +84,7 @@ def extract_keypoints(results):
 <br />  
 <br />
 <br />
+
 ## 4. Building The Model:
 A detection confidence in the Holistic model is adjusted such that the tracking confidence
 is determined to be equal to 0.001 to be able to detect anything and extract any feature.
