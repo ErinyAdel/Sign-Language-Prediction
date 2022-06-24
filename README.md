@@ -49,6 +49,7 @@ in order to add to the training efficiency, a list of 9 different augmentations 
 the videos, and applying these augmentations once for original data and another for flipped/mirrored data
 ```python
 import imgaug.augmenters as iaa
+
 augs=[iaa.Rotate(5),iaa.Rotate(10),iaa.Rotate(15),
       iaa.Rotate(-5),iaa.Rotate(-10),iaa.Rotate(-15),
       iaa.ShearX(5),iaa.ShearX(10),iaa.ShearX(-5),
@@ -85,7 +86,6 @@ def extract_keypoints(results):
 ```
 >A detection confidence in the Holistic model is adjusted such that the tracking confidence
 is determined to be equal to 0.001 to be able to detect anything and extract any feature.
-
 Once the video augmentation was stored and ready, all videos were processed through
 the Google MediaPipe hand tracking technology. In order to input the videos, a python
 script was created. This python script searches for videos in a folder and sends the videos
@@ -108,20 +108,15 @@ the number of features by the Holistic model is 46
 and finally the X,Y, and Z coordinates for every point.
 
 ### Training The Model
-The challenge of this stage is to implement a model of an effective use.
-The objective is to use Long short-term memory neural networks (LSTM) which is a Recurrent Neural Network.
-The first conundrum is to match the parameters with LSTM as RNN deals with linear data.
-
-
-The Final Suggested Solution Implementation (Effective):
+>The Final Suggested Solution Implementation (Effective):
 We used Time Distributed Layer such that it applies the same convolution layer to each
 Timestep (Frames) independently.
 
-**Advantages**: the filter/feature learned by the convolution layer for every frame will be the
+>**Advantages**: the filter/feature learned by the convolution layer for every frame will be the
 same for the other ones as it learns accumulatively on all frames not start to learn on
 every single frame each time
 
-A Conv1D (Convolution with 1 dimension) is applied in the first stage, as a filter 3x1
+>A Conv1D (Convolution with 1 dimension) is applied in the first stage, as a filter 3x1
 (size: 3) is applied on the 3 points.
 
 The first Result (Result 1) is that it learned 64 filters
