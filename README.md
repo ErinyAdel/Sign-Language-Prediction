@@ -107,49 +107,6 @@ the number of features by the Holistic model is 46
 (21 points for Right Hand + 2 Points for the Right Pose + 21 points for the Left Hand + 2 points for the Left Pose), 
 and finally the X,Y, and Z coordinates for every point.
 
-### Training The Model
->The Final Suggested Solution Implementation (Effective):
-We used Time Distributed Layer such that it applies the same convolution layer to each
-Timestep (Frames) independently.
-
->**Advantages**: the filter/feature learned by the convolution layer for every frame will be the
-same for the other ones as it learns accumulatively on all frames not start to learn on
-every single frame each time
-
->A Conv1D (Convolution with 1 dimension) is applied in the first stage, as a filter 3x1
-(size: 3) is applied on the 3 points.
-
-The first Result (Result 1) is that it learned 64 filters
-
-Then MaxPooling is applied to distribute extracted features by picking the maximum
-ones from the steps/frames (technically the half) that contain the learned filters.
-
-Then Conv1D is used again such that filter 3x1 (size: 3) on the 3 points is applied and the
-result was that it learned 96 filters
-
-The same cycle of conv1D and MaxPooling is applied.
-
-After that, A Global MaxPooling is applied to determine the important filters from the
-128 ones across the final 11 features.
-
-The Final shape: (none, 30, 128) and that fits with the LSTM method.
-
-For connecting features to each other, a 2 layers LSTM is added and as a result it learned
-90 features from each frame (Hidden state).
-
-Return_sequence is applied to return the whole sequence in order to make the 45 units
-learn from all the previous 90 features.
-
-Then a dense layer is added with variant units (making the linear layers)
-
-Then batch_normalization is added to normalize the output batch (Limiting numbers to
-be between -1 and 1)
-
-A dropout (dropping some units to focus on others) is added in order to avoid Overfitting
-
-A dense layer then is added with activation softmax in accordance to the predicted words.
-The last step was to Compile the model.
-The steps are shown in the following:
 ```python
 model=Sequential(name="CNNLSTM")
 model.add(TimeDistributed(Conv1D(64, kernel_size=3, padding="same", activation="relu"), input_shape=X_train.shape[1:]))
@@ -171,7 +128,50 @@ model.add(Dense(np.unique(y).shape[0],activation="softmax"))
 model.compile(optimizer="nadam",loss="sparse_categorical_crossentropy",metrics=['accuracy'])
 ```
 
-### Effective Solution Preformance:
+>We used Time Distributed Layer such that it applies the same convolution layer to each
+Timestep (Frames) independently.
+
+>**Advantages**: the filter/feature learned by the convolution layer for every frame will be the
+same for the other ones as it learns accumulatively on all frames not start to learn on
+every single frame each time
+
+>A Conv1D (Convolution with 1 dimension) is applied in the first stage, as a filter 3x1
+(size: 3) is applied on the 3 points.
+
+>The first Result (Result 1) is that it learned 64 filters
+
+>Then MaxPooling is applied to distribute extracted features by picking the maximum
+ones from the steps/frames (technically the half) that contain the learned filters.
+
+>Then Conv1D is used again such that filter 3x1 (size: 3) on the 3 points is applied and the
+result was that it learned 96 filters
+
+>The same cycle of conv1D and MaxPooling is applied.
+
+>After that, A Global MaxPooling is applied to determine the important filters from the
+128 ones across the final 11 features.
+
+>The Final shape: (none, 30, 128) and that fits with the LSTM method.
+
+>For connecting features to each other, a 2 layers LSTM is added and as a result it learned
+90 features from each frame (Hidden state).
+
+>Return_sequence is applied to return the whole sequence in order to make the 45 units
+learn from all the previous 90 features.
+
+>Then a dense layer is added with variant units (making the linear layers)
+
+>Then batch_normalization is added to normalize the output batch (Limiting numbers to
+be between -1 and 1)
+
+>A dropout (dropping some units to focus on others) is added in order to avoid Overfitting
+
+>A dense layer then is added with activation softmax in accordance to the predicted words.
+The last step was to Compile the model.
+The steps are shown in the following:
+
+
+## 4. The Model Preformance
 | |**Train**|**Validation**|**Test**|
 | ------ | -------- | ------- | ------- |
 | **Accuracy** | 0.999 | 1.000 | 0.997 |
