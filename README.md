@@ -83,10 +83,7 @@ def extract_keypoints(results):
     rh = np.array([[res.x, res.y, res.z] for res in results.right_hand_landmarks.landmark]) if results.right_hand_landmarks else np.zeros((21,3))
     return np.concatenate([la ,lh ,ra , rh])
 ```
-  
-
-## 4. Building The Model:
-A detection confidence in the Holistic model is adjusted such that the tracking confidence
+>A detection confidence in the Holistic model is adjusted such that the tracking confidence
 is determined to be equal to 0.001 to be able to detect anything and extract any feature.
 
 Once the video augmentation was stored and ready, all videos were processed through
@@ -101,24 +98,22 @@ mentioned. If the visibility is greater 0.2, it appends them in array with its X
 coordinates. If the visibility is less than the assigned number, it appends it all with zeros.
 The model applies the same mechanism for all landmarks as shown in the following
 
+<br />
 
+## 4. Building The Model:
+The input shape from MediaPipe Holistic model (16366, 30, 46, 3) which means the batch number of videos we
+extracted from the beginning is 16366 videos that is 30 frames for each video, and
+the number of features by the Holistic model is 46 
+(21 points for Right Hand + 2 Points for the Right Pose + 21 points for the Left Hand + 2 points for the Left Pose), 
+and finally the X,Y, and Z coordinates for every point.
 
-The Resulted Shape was (16366, 30, 46, 3) which means the batch number of videos we
-extracted from the beginning is 16366 videos that is 30 frames per second for each, and
-the number of features by the Holistic model is 46 (21 points for Right Hand + 2 Points
-for the Right Pose + 21 points for the Left Hand + 2 points for the Left Pose), and finally
-the X,Y, and Z coordinates for every point.
-
-## Training Stage:
-
+### Training The Model
 The challenge of this stage is to implement a model of an effective use.
-The objective is to use Long short-term memory neural networks (LSTM) which is a
-Recurrent Neural Network.
-The first conundrum is to match the parameters with LSTM as RNN deals with linear
-data.
+The objective is to use Long short-term memory neural networks (LSTM) which is a Recurrent Neural Network.
+The first conundrum is to match the parameters with LSTM as RNN deals with linear data.
 
 
-### The Final Suggested Solution Implementation (Effective):
+The Final Suggested Solution Implementation (Effective):
 We used Time Distributed Layer such that it applies the same convolution layer to each
 Timestep (Frames) independently.
 
