@@ -20,7 +20,7 @@ and validation accuracy, 99.98% in testing, and very accurate results in real-ti
 The dataset is manually collected. We gathered clips from certified
 references on popular platforms like YouTube
 
-![Youtube Header](images/hand_landmarks.png "لغة الاشارة المصرية")
+![Youtube Header](images/youtube_header.png "لغة الاشارة المصرية")
   
   
 ### 2. Data Preprocessing
