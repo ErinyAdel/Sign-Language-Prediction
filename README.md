@@ -15,20 +15,24 @@ and validation accuracy, 99.98% in testing, and very accurate results in real-ti
 - Connecting The Model With a Working Web Application
 
 ## Implementation Details:
-- First of all, the Data Set is manually collected. We gathered clips from certified
+
+### 1. Collecting The Data
+The dataset is manually collected. We gathered clips from certified
 references on popular platforms like YouTube
 
 ![Youtube Header](images/Screenshot%202022-06-18%20020846.png "لغة الاشارة المصرية")
-- We then trimmed the parts of needed exact gestures using media editing software like
+
+### 2. Data Preprocessing
+- Trimming the parts of needed exact gestures using media editing software like
 Adobe Premiere.
 ![Adobe Premier](images/Screenshot%202022-06-18%20021157.png "Trimming")
 
 - Then a Fix_Video() function is applied to obtain a fixed frame rate on all videos, the
-chosen frame rate is 30 FPS. The function Removes excessive frames from videos that
+chosen frame number is 30 frame per video. The function Removes excessive frames from videos that
 exceeds the specified number of FPS, and it duplicates frames in videos that are short of
 the required FPS.
 ```python
-def fixVideo(frames,video_name,startFrames=0,endFrames=0,middleFrames=0):
+def fixVideo(frames, video_name, startFrames=0, endFrames=0, middleFrames=0):
 ```
 
 - To be able to identify signs, a very large database is required. Better results are
@@ -44,8 +48,11 @@ augs=[iaa.Rotate(5),iaa.Rotate(10),iaa.Rotate(15),
       iaa.ShearX(-10),iaa.ScaleY(1.1),iaa.ScaleY(0.9),
       iaa.TranslateX(px=5),iaa.TranslateY(px=5),
       iaa.Sequential([iaa.TranslateY(px=5),iaa.TranslateX(px=5)])]
+
+aug = iaa.Fliplr(1)
+
 for video in df["Video"]:
-    video_file=vread(video)
+    video_file = vread(video)
     output=aug.augment_images(video_file)
     vwrite(f'{video.split(".")[0]}_filp.mp4',output)
 ```
