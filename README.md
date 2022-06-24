@@ -84,7 +84,6 @@ def extract_keypoints(results):
     return np.concatenate([la ,lh ,ra , rh])
 ```
   
-<br />  
 
 ## 4. Building The Model:
 A detection confidence in the Holistic model is adjusted such that the tracking confidence
@@ -118,58 +117,8 @@ Recurrent Neural Network.
 The first conundrum is to match the parameters with LSTM as RNN deals with linear
 data.
 
-### First suggested solution implementation:
-PCA is implemented to apply Dimensionality Reduction.
-We used Incremental PCA such that it can take the 3 points (X, Y, and Z) and extract one
-point out of them (Represent them in 1 point)
-The, after Looping on all frames of all videos, we apply partial-fit to it and determine its
-learned outcome.
-```python
-from sklearn.decomposition import IncrementalPCA
-IPCA=IncrementalPCA(n_components=1)
-for video in tqdm(X_train):
-    for frame in video:
-        IPCA.partial_fit(frame)
 
-def return_pca(data):
-    pca=[]
-    for video in tqdm(data):
-        frames=[]
-        for frame in video:
-            frames.append(IPCA.transform(frame))
-        pca.append(np.array(frames))
-    return np.array(pca).reshape((-1,30,46))
-
-X_train_pca=return_pca(X_train)
-X_test_pca=return_pca(X_test)
-X_valid_pca=return_pca(X_valid)
-```
-The Result (Variance Ratio) was approximately equals 0.677 which means 33% of data
-was lost.
-Then PCA-Transform on the data was applied and returned the result.
-The Output shape: (16366, 30, 46), 16366 videos with 30 FPS each, and 46 features.
-
-We then Trained LSTM on it as shown in the following:
-```python
-model2=Sequential(name="LstmModel")
-model2.add(LSTM(256,return_sequences=True,input_shape=X_train_lstm.shape[1:]))
-model2.add(LSTM(128,dropout=0.3))
-model2.add(Dense(100,activation="relu"))
-model2.add(Dropout(0.2))
-model2.add(Dense(128,activation="relu"))
-model2.add(Dropout(0.2))
-model2.add(Dense(np.unique(y).shape[0],activation="softmax"))
-model2.compile(optimizer="nadam",loss="sparse_categorical_crossentropy",metrics=['accuracy'])
-```
-### Second suggested solution implementation:
-Using Reshape instead of PCA such that we multiplied the 3 points (X, Y, and Z) by the
-46 features. (3 * 46) as shown in the following:
-```python
-X_train_lstm=X_train.reshape((-1,30,3*46))
-X_test_lstm=X_test.reshape((-1,30,3*46))
-X_valid_lstm=X_valid.reshape((-1,30,3*46))
-```
-### Third suggested solution implementation: (Effective)
+### The Final Suggested Solution Implementation (Effective):
 We used Time Distributed Layer such that it applies the same convolution layer to each
 Timestep (Frames) independently.
 
@@ -213,21 +162,22 @@ The last step was to Compile the model.
 The steps are shown in the following:
 ```python
 model=Sequential(name="CNNLSTM")
-model.add(TimeDistributed(Conv1D(64,kernel_size=3,padding="same",activation="relu"),input_shape=X_train.shape[1:]))
+model.add(TimeDistributed(Conv1D(64, kernel_size=3, padding="same", activation="relu"), input_shape=X_train.shape[1:]))
 model.add(TimeDistributed(MaxPool1D()))
-model.add(TimeDistributed(Conv1D(96,kernel_size=3,padding="same",activation="relu")))
+model.add(TimeDistributed(Conv1D(96, kernel_size=3, padding="same", activation="relu")))
 model.add(TimeDistributed(MaxPool1D()))
-model.add(TimeDistributed(Conv1D(128,kernel_size=3,padding="same",activation="relu")))
+model.add(TimeDistributed(Conv1D(128, kernel_size=3, padding="same", activation="relu")))
 model.add(TimeDistributed(GlobalMaxPool1D()))
-model.add(LSTM(90,dropout=0.4,return_sequences=True))
-model.add(LSTM(45,dropout=0.4))
-model.add(Dense(100,activation="relu"))
+model.add(LSTM(90, dropout=0.4, return_sequences=True))
+model.add(LSTM(45, dropout=0.4))
+model.add(Dense(100, activation="relu"))
 model.add(BatchNormalization())
 model.add(Dropout(0.4))
-model.add(Dense(50,activation="relu"))
+model.add(Dense(50, activation="relu"))
 model.add(BatchNormalization())
 model.add(Dropout(0.4))
 model.add(Dense(np.unique(y).shape[0],activation="softmax"))
+
 model.compile(optimizer="nadam",loss="sparse_categorical_crossentropy",metrics=['accuracy'])
 ```
 
@@ -238,24 +188,19 @@ model.compile(optimizer="nadam",loss="sparse_categorical_crossentropy",metrics=[
 
 
 ## How To Run The Model:
-- You can Access python Script in the `python` Folder **(Most Accurate Solution)** and install project dependencies using
+- Install project dependencies using
  ```
  pip install opencv-python numpy mediapipe arabic_reshaper python-bidi pillow tensorflow
-
  ```
->then yo can run it with
+>Run it with
 ```
-python run.py (--input | -i) (0 `for webcam`| path/to/video )
+python run.py (--input | -i) (0 `for webcam`| path/to/video)
 ```
 
-- or you can run run the javascript version of the model by running the react application in the `client` folder
+- Or run the javascript version of the model by running the react application in the `client` folder
 ```
 cd client
 npm start 
 ```
 
-- or you can use the hosted version on [Heroku](https://sign-language-pred.herokuapp.com/) 
-
-
-
-
+- Or use the hosted version on [Heroku](https://sign-language-pred.herokuapp.com/) 
