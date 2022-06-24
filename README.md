@@ -25,9 +25,11 @@ references on popular platforms like YouTube
 ### 2. Data Preprocessing
 - Trimming the parts of needed exact gestures using media editing software like
 Adobe Premiere.
+
 ![Adobe Premier](images/Screenshot%202022-06-18%20021157.png "Trimming")
 
-- Then a Fix_Video() function is applied to obtain a fixed frame rate on all videos, the
+- Fixing the number of frames of all videos to be balanced data.
+Then a Fix_Video() function is applied to obtain a fixed frame number on all videos, the
 chosen frame number is 30 frame per video. The function Removes excessive frames from videos that
 exceeds the specified number of FPS, and it duplicates frames in videos that are short of
 the required FPS.
@@ -35,11 +37,11 @@ the required FPS.
 def fixVideo(frames, video_name, startFrames=0, endFrames=0, middleFrames=0):
 ```
 
-- To be able to identify signs, a very large database is required. Better results are
+- Augmentation the dataset size to be able to identify signs. Better results are
 guaranteed with a larger database (if the videos are correctly set). The video
 augmentation has been done with Python. Then Augmentation on the videos were applied
 in order to add to the training efficiency, a list of 9 different augmentations were added to
-the videos
+the videos, and applying these augmentations once for original data and another for flipped/mirrored data
 ```python
 import imgaug.augmenters as iaa
 augs=[iaa.Rotate(5),iaa.Rotate(10),iaa.Rotate(15),
@@ -57,7 +59,8 @@ for video in df["Video"]:
     vwrite(f'{video.split(".")[0]}_filp.mp4',output)
 ```
 
-- After that, features from videos are extracted using a tool called MediaPipe. Its function
+### 3. Feature Extraction 
+After that, features from videos are extracted using a tool called MediaPipe. Its function
 is to adjust the points on the focused body and hands positions in order to take part to
 train the model later.
 >In MediaPipe, a section called Holistic MediaPipe is used which contains the two main models used for adjusting the points, Hands and Pose. MediaPipe Hands utilizes an ML pipeline consisting of multiple models working together: A palm detection model that operates on the full image and returns an oriented hand bounding box. A hand landmark model that operates on the cropped image region defined by the palm detector and returns high-fidelity 3D hand key points. MediaPipe Poses use the same mechanism for the rest of the body. The Hand model is fully used to detect the hands in the extracted videos, and the Pose model is used only on points 13,15 and 14,16.
