@@ -170,12 +170,14 @@ be between -1 and 1)
 The last step was to Compile the model.
 The steps are shown in the following:
 
+<br />
 
 ## 4. The Model Preformance
 | |**Train**|**Validation**|**Test**|
 | ------ | -------- | ------- | ------- |
 | **Accuracy** | 0.999 | 1.000 | 0.997 |
 
+<br />
 
 ## How To Run The Model:
 - Install project dependencies using
