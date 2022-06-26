@@ -17,15 +17,13 @@ and validation accuracy, 99.98% in testing, and very accurate results in real-ti
 ## Implementation Details:
 
 ### 1. Collecting The Data
-The dataset is manually collected. We gathered clips from certified
-references on popular platforms like YouTube
+The dataset is manually collected. Clips are scraped from YouTube platform
 
-![Youtube Header](images/youtube_header.png "لغة الاشارة المصرية")
+![Youtube Header](images/youtube_header.png "بحث عن لغة الاشارة المصرية")
   
   
 ### 2. Data Preprocessing
-- Trimming the parts of needed exact gestures using media editing software like
-Adobe Premiere.
+- Trimming the parts of needed gestures using Adobe Premiere.
 
 ![Adobe Premier](images/premiere_interface.png "Trimming")
   
